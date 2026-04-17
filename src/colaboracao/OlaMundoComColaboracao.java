@@ -13,6 +13,8 @@ public class OlaMundoComColaboracao {
             System.out.println(i);
         }
         System.out.println("Todos estamos entrando no Ian!!");
+        System.out.println("Ian gosta de mostrar foto sem roupa pra homem!!");
 
     }
+
 }
