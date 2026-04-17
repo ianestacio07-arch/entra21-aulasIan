@@ -13,6 +13,5 @@ public class OlaMundoComColaboracao {
             System.out.println(i);
         }
         System.out.println("Ajuda do professor");
-
     }
 }
