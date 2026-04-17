@@ -9,5 +9,9 @@ public class OlaMundoComColaboracao {
         for (int i = 0; i < 100; i++) {
             System.out.println("Qualquer coisa");
         }
+        for (int i = 100; i >= 1; i--) {
+            System.out.println(i);
+        }
+
     }
 }
