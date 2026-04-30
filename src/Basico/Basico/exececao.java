@@ -21,9 +21,9 @@ public class exececao {
             System.out.println("Não pode dividir por zero, bobão");
 
         }
-        if (num2 == 0);  {
+        if (num2 == 0)  {
             System.out.println("Não pode dividir por zero, bobão");
-        } else  {
+        } else {
             System.out.println(num1 / num2);
         }
 
