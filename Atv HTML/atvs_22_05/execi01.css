@@ -1,0 +1,74 @@
+* {
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+
+    background-color: #d3dde0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    height: 100vh;
+}
+
+form {
+    background-color: white;
+
+    padding: 25px;
+
+    border-radius: 10px;
+
+    width: 300px;
+}
+
+input {
+    width: 100%;
+
+    padding: 10px;
+
+    margin-bottom: 15px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 5px;
+
+    outline: none;
+}
+
+button {
+    width: 100%;
+
+    padding: 10px;
+
+    border: none;
+
+    border-radius: 5px;
+
+    background-color: #2563eb;
+
+    color: white;
+
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: gray;
+
+    cursor: not-allowed;
+}
+
+.senha-ok {
+    border: 2px solid green;
+}
+
+.senha-erro {
+    border: 2px solid red;
+}

@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Batalha dos Reis</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;user-select:none}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(135deg,#071629,#123d70,#071629);
+  color:white;
+  text-align:center;
+  overflow-x:hidden;
+}
+
+.tela{display:none;min-height:100vh;padding:15px}
+.tela.ativa{display:block}
+
+h1{
+  color:#ffd84d;
+  text-shadow:3px 3px #000;
+  font-size:42px;
+  margin:20px;
+}
+
+.btn{
+  background:linear-gradient(#ffd75c,#f08b00);
+  border:4px solid #fff3ad;
+  border-radius:14px;
+  padding:12px 22px;
+  color:white;
+  font-weight:900;
+  cursor:pointer;
+  text-shadow:2px 2px #000;
+  box-shadow:0 6px 0 #8e5200;
+}
+
+.btn:hover{transform:scale(1.05)}
+
+.hero{
+  max-width:700px;
+  margin:70px auto;
+  background:rgba(0,0,0,.4);
+  border:4px solid #29b6ff;
+  border-radius:25px;
+  padding:35px;
+}
+
+.perfil-card{
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  flex-wrap:wrap;
+  margin:20px;
+  font-weight:bold;
+}
+
+.topbar{
+  max-width:1000px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(0,0,0,.35);
+  border:3px solid #29b6ff;
+  border-radius:15px;
+  padding:12px;
+}
+
+.menu-grid{
+  max-width:900px;
+  margin:40px auto;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:20px;
+}
+
+.menu-card{
+  height:170px;
+  border-radius:20px;
+  background:linear-gradient(#0e83d9,#03467b);
+  border:4px solid #28b9ff;
+  color:white;
+  font-size:42px;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  box-shadow:0 8px 0 rgba(0,0,0,.45);
+}
+
+.menu-card b{font-size:26px}
+.menu-card small{font-size:15px;color:#c9edff}
+
+.batalha{
+  background:linear-gradient(#d42b2b,#7a1010);
+  border-color:#ff6464;
+}
+
+.colecao,.deck-atual{
+  max-width:1000px;
+  margin:20px auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+  gap:12px;
+}
+
+.card{
+  min-height:120px;
+  background:linear-gradient(#243c55,#0a1f37);
+  border:3px solid #2bbdff;
+  border-radius:14px;
+  color:white;
+  cursor:pointer;
+  position:relative;
+  padding:8px;
+  box-shadow:0 6px 0 rgba(0,0,0,.45);
+}
+
+.card:hover,.card.selecionada{
+  transform:translateY(-4px);
+  border-color:#ffec4a;
+}
+
+.card .emoji{font-size:35px}
+.card b{display:block;font-size:13px}
+.card small{color:#45dcff;font-weight:bold}
+
+.custo{
+  position:absolute;
+  left:-8px;
+  top:-8px;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  background:#d500ff;
+  border:3px solid white;
+  display:grid;
+  place-items:center;
+  font-weight:bold;
+}
+
+.bloqueada{
+  filter:grayscale(1);
+  opacity:.45;
+}
+
+.battle-layout{
+  display:grid;
+  grid-template-columns:190px 1fr 190px;
+  gap:12px;
+  width:min(1180px,98vw);
+  margin:auto;
+}
+
+.side-panel{
+  border-radius:16px;
+  padding:10px;
+  box-shadow:0 8px 0 rgba(0,0,0,.45);
+}
+
+.blue{
+  background:linear-gradient(#0e83d9,#03467b);
+  border:4px solid #28b9ff;
+}
+
+.red{
+  background:linear-gradient(#bb1748,#5d0922);
+  border:4px solid #ff4d7a;
+}
+
+#arena{
+  width:620px;
+  max-width:100%;
+  height:760px;
+  margin:auto;
+  position:relative;
+  border-radius:18px;
+  overflow:hidden;
+  border:6px solid #163049;
+  box-shadow:0 12px 0 rgba(0,0,0,.5);
+  background:
+    linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px),
+    linear-gradient(#8bcf34,#70bf2e);
+  background-size:50px 50px;
+  cursor:crosshair;
+}
+
+#spawnArea{
+  position:absolute;
+  left:70px;
+  right:70px;
+  bottom:0;
+  height:360px;
+  background:rgba(0,130,255,.08);
+  border-top:4px dashed rgba(255,255,255,.55);
+  z-index:3;
+  pointer-events:none;
+}
+
+.rio{
+  position:absolute;
+  top:360px;
+  width:100%;
+  height:55px;
+  background:linear-gradient(90deg,#009cdb,#13d1ff,#0074bf);
+  z-index:2;
+}
+
+.ponte{
+  position:absolute;
+  top:345px;
+  width:92px;
+  height:83px;
+  background:repeating-linear-gradient(90deg,#a86a35 0 14px,#7c431e 14px 18px);
+  border:4px solid #553016;
+  border-radius:8px;
+  z-index:5;
+}
+
+.esquerda{left:120px}
+.direita{right:120px}
+
+.caminho{
+  position:absolute;
+  width:34px;
+  height:100%;
+  background:rgba(213,175,96,.55);
+  z-index:1;
+}
+
+.caminho-esq{left:148px}
+.caminho-dir{right:148px}
+
+.caminho-rei{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  width:34px;
+  background:rgba(213,175,96,.55);
+  z-index:1;
+}
+
+.caminho-rei-inimigo{
+  top:40px;
+  height:160px;
+}
+
+.caminho-rei-jogador{
+  bottom:40px;
+  height:160px;
+}
+
+.torre{
+  position:absolute;
+  width:92px;
+  height:92px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  font-size:22px;
+  font-weight:900;
+  color:white;
+  text-shadow:2px 2px #000;
+  border:5px solid #2b2b2b;
+  z-index:10;
+  box-shadow:0 9px 0 rgba(0,0,0,.45);
+}
+
+.torre:before{
+  content:"👑";
+  position:absolute;
+  top:-24px;
+  font-size:24px;
+}
+
+.torre .barra{
+  position:absolute;
+  width:90px;
+  height:11px;
+  top:-12px;
+  left:-3px;
+  background:#111;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.torre .barra div{
+  width:100%;
+  height:100%;
+  background:#2ddfff;
+}
+
+.torre.inimiga .barra div{
+  background:#ff3c72;
+}
+
+#torreInimigaRei{top:40px;left:264px;background:linear-gradient(#ff586c,#a30020)}
+#torreInimigaEsq{top:170px;left:165px;background:linear-gradient(#ff586c,#a30020)}
+#torreInimigaDir{top:170px;right:165px;background:linear-gradient(#ff586c,#a30020)}
+
+#torreJogadorRei{bottom:40px;left:264px;background:linear-gradient(#38b7ff,#005dcc)}
+#torreJogadorEsq{bottom:170px;left:165px;background:linear-gradient(#38b7ff,#005dcc)}
+#torreJogadorDir{bottom:170px;right:165px;background:linear-gradient(#38b7ff,#005dcc)}
+.tropa{
+  position:absolute;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:27px;
+  border:3px solid #111;
+  z-index:20;
+  box-shadow:0 6px 0 rgba(0,0,0,.45),0 0 12px rgba(255,255,255,.18);
+  transition:transform .12s;
+}
+
+.tropa.batendo{
+  transform:scale(1.15) rotate(-5deg);
+  filter:brightness(1.25);
+}
+
+.hp{
+  position:absolute;
+  top:-12px;
+  width:54px;
+  height:8px;
+  background:#111;
+  border-radius:12px;
+  overflow:hidden;
+}
+
+.hp div{
+  width:100%;
+  height:100%;
+  background:#31e84e;
+}
+
+.inimigo .hp div{
+  background:#ff3060;
+}
+
+.projetil{
+  position:absolute;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  z-index:80;
+  pointer-events:none;
+  box-shadow:0 0 15px white;
+  transform:translate(-50%,-50%);
+}
+
+.explosao{
+  position:absolute;
+  border-radius:50%;
+  border:4px solid rgba(255,255,255,.85);
+  background:radial-gradient(circle,rgba(255,240,120,.8),rgba(255,80,0,.4),transparent 70%);
+  z-index:75;
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+  animation:boom .42s forwards;
+}
+
+@keyframes boom{
+  from{
+    opacity:1;
+    transform:translate(-50%,-50%) scale(.2);
+  }
+
+  to{
+    opacity:0;
+    transform:translate(-50%,-50%) scale(1);
+  }
+}
+
+.dano-float{
+  position:absolute;
+  z-index:100;
+  font-weight:900;
+  color:#fff04a;
+  text-shadow:2px 2px #000;
+  animation:subir .7s forwards;
+  pointer-events:none;
+}
+
+@keyframes subir{
+  from{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+
+  to{
+    opacity:0;
+    transform:translateY(-38px) scale(1.2);
+  }
+}
+
+.hud{
+  width:620px;
+  max-width:100%;
+  margin:10px auto 0;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+}
+
+.elixir-box{
+  background:rgba(0,0,0,.55);
+  border:3px solid #0b1a2c;
+  height:35px;
+  border-radius:13px;
+  overflow:hidden;
+  position:relative;
+}
+
+#elixirBar{
+  height:100%;
+  width:50%;
+  background:linear-gradient(90deg,#9b00ff,#ff2fff);
+  transition:.25s;
+}
+
+.elixir-box span{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  font-weight:900;
+  text-shadow:2px 2px #000;
+}
+
+.mao-cartas{
+  width:620px;
+  max-width:100%;
+  margin:10px auto 18px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+
+#mensagemArena{
+  position:absolute;
+  top:320px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:200;
+  font-size:42px;
+  font-weight:900;
+  color:#ffd84d;
+  text-shadow:4px 4px #000;
+  display:none;
+  pointer-events:none;
+  white-space:nowrap;
+}
+
+.resultado-bau{
+  max-width:600px;
+  margin:20px auto;
+  background:rgba(0,0,0,.45);
+  border:3px solid gold;
+  border-radius:18px;
+  padding:15px;
+  font-weight:bold;
+}
+
+.torre.destruida{
+  opacity:.35;
+  filter:grayscale(1);
+}
+
+@media(max-width:980px){
+  .battle-layout{
+    grid-template-columns:1fr;
+  }
+
+  .side-panel{
+    display:none;
+  }
+
+  .menu-grid{
+    grid-template-columns:1fr;
+  }
+
+  #arena{
+    height:690px;
+  }
+
+  .mao-cartas{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+<section id="telaInicio" class="tela ativa">
+
+  <div class="hero">
+    <h1>⚔️ Batalha dos Reis ⚔️</h1>
+
+    <p>
+      Monte seu deck, abra baús, evolua cartas e destrua a torre do rei inimiga.
+    </p>
+
+    <div class="perfil-card">
+      <strong>IanEstacio07</strong>
+      <span>🏆 <b id="trofeusInicio">12710</b></span>
+      <span>⭐ Nível <b id="nivelConta">1</b></span>
+      <span>🪙 <b id="ouro">500</b></span>
+    </div>
+
+    <button class="btn" onclick="mostrarTela('telaMenu')">
+      Entrar
+    </button>
+  </div>
+
+</section>
+
+<section id="telaMenu" class="tela">
+
+  <header class="topbar">
+    <h2>Batalha dos Reis</h2>
+
+    <div>
+      🏆 <span id="trofeusMenu">12710</span>
+      🪙 <span id="ouroMenu">500</span>
+      💎 25
+    </div>
+  </header>
+
+  <main class="menu-grid">
+
+    <button class="menu-card batalha" onclick="iniciarPartida()">
+      ⚔️
+      <b>Batalha</b>
+      <small>Modo 1v1</small>
+    </button>
+
+    <button class="menu-card" onclick="mostrarTela('telaDeck')">
+      🃏
+      <b>Deck</b>
+      <small>Monte suas cartas</small>
+    </button>
+
+    <button class="menu-card" onclick="mostrarTela('telaColecao')">
+      📚
+      <b>Coleção</b>
+      <small>Veja cartas e níveis</small>
+    </button>
+
+    <button class="menu-card" onclick="abrirBau()">
+      🎁
+      <b>Baú Aleatório</b>
+      <small>Desbloqueie cartas</small>
+    </button>
+
+  </main>
+
+  <div id="resultadoBau" class="resultado-bau"></div>
+
+</section>
+
+<section id="telaDeck" class="tela">
+
+  <header class="topbar">
+    <button class="btn" onclick="mostrarTela('telaMenu')">⬅ Voltar</button>
+    <h2>Monte seu Deck</h2>
+    <span><b id="qtdDeck">0</b>/8 cartas</span>
+  </header>
+
+  <div class="deck-atual" id="deckAtual"></div>
+
+  <h3>Cartas desbloqueadas</h3>
+
+  <div class="colecao" id="cartasDeck"></div>
+
+</section>
+
+<section id="telaColecao" class="tela">
+
+  <header class="topbar">
+    <button class="btn" onclick="mostrarTela('telaMenu')">⬅ Voltar</button>
+    <h2>Coleção</h2>
+    <span>Cartas e níveis</span>
+  </header>
+
+  <div class="colecao" id="cartasColecao"></div>
+
+</section>
+<section id="telaBatalha" class="tela">
+
+    <header class="topbar">
+      <button class="btn" onclick="encerrarPartida()">⬅ Sair</button>
+    
+      <div>
+        🏆 IanEstacio07
+      </div>
+    
+      <div>
+        ⏱️ <span id="tempo">180</span>s
+      </div>
+    </header>
+    
+    <div class="battle-layout">
+    
+    <aside class="side-panel blue">
+      <h3>Seu Deck</h3>
+      <div id="listaDeckJogador"></div>
+    </aside>
+    
+    <main>
+    
+    <div id="arena">
+    
+      <div id="spawnArea"></div>
+    
+      <div class="rio"></div>
+    
+      <div class="ponte esquerda"></div>
+      <div class="ponte direita"></div>
+    
+      <div class="caminho caminho-esq"></div>
+      <div class="caminho caminho-dir"></div>
+    
+      <div class="caminho-rei caminho-rei-inimigo"></div>
+      <div class="caminho-rei caminho-rei-jogador"></div>
+    
+      <div id="mensagemArena"></div>
+    
+      <!-- TORRES INIMIGAS -->
+    
+      <div class="torre inimiga" id="torreInimigaRei">
+        <div class="barra"><div></div></div>
+        <span>500</span>
+      </div>
+    
+      <div class="torre inimiga" id="torreInimigaEsq">
+        <div class="barra"><div></div></div>
+        <span>300</span>
+      </div>
+    
+      <div class="torre inimiga" id="torreInimigaDir">
+        <div class="barra"><div></div></div>
+        <span>300</span>
+      </div>
+    
+      <!-- TORRES JOGADOR -->
+    
+      <div class="torre jogador" id="torreJogadorRei">
+        <div class="barra"><div></div></div>
+        <span>500</span>
+      </div>
+    
+      <div class="torre jogador" id="torreJogadorEsq">
+        <div class="barra"><div></div></div>
+        <span>300</span>
+      </div>
+    
+      <div class="torre jogador" id="torreJogadorDir">
+        <div class="barra"><div></div></div>
+        <span>300</span>
+      </div>
+    
+    </div>
+    
+    <div class="hud">
+    
+      <div class="elixir-box">
+        <div id="elixirBar"></div>
+    
+        <span>
+          💧 Elixir: <b id="elixirTxt">5</b>/10
+        </span>
+      </div>
+    
+      <button class="btn" onclick="reiniciarPartida()">
+        Reiniciar
+      </button>
+    
+    </div>
+    
+    <div class="mao-cartas" id="maoCartas"></div>
+    
+    </main>
+    
+    <aside class="side-panel red">
+      <h3>Deck Inimigo 2.6</h3>
+      <div id="listaDeckInimigo"></div>
+    </aside>
+    
+    </div>
+    </section>
+    
+    </div>
+    
+    <script>
+    
+    const cartas = [
+    
+    {
+    nome:"Mega",
+    emoji:"🤖",
+    custo:7,
+    raridade:"Lendária",
+    tipo:"terrestre",
+    nivel:11,
+    desbloqueada:true
+    },
+    
+    {
+    nome:"Ariete",
+    emoji:"🐏",
+    custo:4,
+    raridade:"Rara",
+    tipo:"terrestre",
+    nivel:10,
+    desbloqueada:true
+    },
+    
+    {
+    nome:"Fúria",
+    emoji:"💢",
+    custo:2,
+    raridade:"Comum",
+    tipo:"feitiço",
+    nivel:9,
+    desbloqueada:true
+    },
+    
+    {
+    nome:"Tronco",
+    emoji:"🪵",
+    custo:2,
+    raridade:"Lendária",
+    tipo:"feitiço",
+    nivel:11,
+    desbloqueada:true
+    },
+    
+    {
+    nome:"Mineiro Bombado",
+    emoji:"⛏️",
+    custo:3,
+    raridade:"Épica",
+    tipo:"terrestre",
+    nivel:10,
+    desbloqueada:true
+    },
+    
+    {
+    nome:"Gangue",
+    emoji:"👺",
+    custo:3,
+    raridade:"Comum",
+    tipo:"terrestre",
+    nivel:9,
+    desbloqueada:true
+    },
+    
+    {
+    nome:"Pirotécnica",
+    emoji:"🎆",
+    custo:3,
+    raridade:"Rara",
+    tipo:"ambos",
+    nivel:10,
+    desbloqueada:true
+    },
+    
+    {
+    nome:"Dragão",
+    emoji:"🐉",
+    custo:5,
+    raridade:"Épica",
+    tipo:"aereo",
+    nivel:8,
+    desbloqueada:false
+    },
+    
+    {
+    nome:"Mago",
+    emoji:"🧙",
+    custo:5,
+    raridade:"Rara",
+    tipo:"ambos",
+    nivel:8,
+    desbloqueada:false
+    },
+    
+    {
+    nome:"Mini Pekka",
+    emoji:"⚔️",
+    custo:4,
+    raridade:"Rara",
+    tipo:"terrestre",
+    nivel:9,
+    desbloqueada:false
+    }
+    
+    ];
+    
+    let deckAtual = [
+    "🤖",
+    "🐏",
+    "💢",
+    "🪵",
+    "⛏️",
+    "👺",
+    "🎆"
+    ];
+    
+    function mostrarTela(id){
+    
+    document.querySelectorAll(".tela").forEach(t=>{
+      t.classList.remove("ativa");
+    });
+    
+    document.getElementById(id).classList.add("ativa");
+    
+    }
+    
+    function renderColecao(){
+    
+    const colecao = document.getElementById("cartasColecao");
+    const deck = document.getElementById("cartasDeck");
+    
+    if(colecao) colecao.innerHTML = "";
+    if(deck) deck.innerHTML = "";
+    
+    cartas.forEach(carta=>{
+    
+    const div = document.createElement("div");
+    
+    div.className =
+    "card " +
+    (!carta.desbloqueada ? "bloqueada" : "");
+    
+    div.innerHTML = `
+    <div class="custo">${carta.custo}</div>
+    
+    <div class="emoji">${carta.emoji}</div>
+    
+    <b>${carta.nome}</b>
+    
+    <small>
+    ${carta.raridade}
+    </small>
+    
+    <br>
+    
+    <small>
+    Nível ${carta.nivel}
+    </small>
+    `;
+    
+    if(colecao){
+    colecao.appendChild(div.cloneNode(true));
+    }
+    
+    if(deck){
+    deck.appendChild(div);
+    }
+    
+    });
+    
+    }
+    
+    function abrirBau(){
+    
+    const resultado =
+    document.getElementById("resultadoBau");
+    
+    const bloqueadas =
+    cartas.filter(c=>!c.desbloqueada);
+    
+    if(bloqueadas.length <= 0){
+    
+    resultado.innerHTML =
+    "🎉 Todas as cartas já foram desbloqueadas.";
+    
+    return;
+    
+    }
+    
+    const carta =
+    bloqueadas[
+    Math.floor(Math.random()*bloqueadas.length)
+    ];
+    
+    carta.desbloqueada = true;
+    
+    resultado.innerHTML = `
+    <h2>🎁 Baú Aberto!</h2>
+    
+    <p>
+    Você desbloqueou:
+    </p>
+    
+    <h1>
+    ${carta.emoji}
+    </h1>
+    
+    <h2>
+    ${carta.nome}
+    </h2>
+    
+    <p>
+    ${carta.raridade}
+    </p>
+    `;
+    
+    renderColecao();
+    
+    }
+    
+    function iniciarPartida(){
+    
+    mostrarTela("telaBatalha");
+    
+    renderDeckBatalha();
+    
+    }
+    
+    function renderDeckBatalha(){
+    
+    const mao =
+    document.getElementById("maoCartas");
+    
+    mao.innerHTML = "";
+    
+    deckAtual.forEach(emoji=>{
+    
+    const carta =
+    cartas.find(c=>c.emoji === emoji);
+    
+    if(!carta) return;
+    
+    const div =
+    document.createElement("div");
+    
+    div.className = "card";
+    
+    div.innerHTML = `
+    <div class="custo">${carta.custo}</div>
+    
+    <div class="emoji">
+    ${carta.emoji}
+    </div>
+    
+    <b>
+    ${carta.nome}
+    </b>
+    
+    <small>
+    ${carta.tipo}
+    </small>
+    `;
+    
+    mao.appendChild(div);
+    
+    });
+    
+    }
+    
+    function reiniciarPartida(){
+    
+    location.reload();
+    
+    }
+    
+    function encerrarPartida(){
+    
+    mostrarTela("telaMenu");
+    
+    }
+    
+    renderColecao();
+    
+    </script>
+    
+    </body>
+    </html>

@@ -1,0 +1,29 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+table{
+    display: flex;
+    flex-direction: column;
+    border: 3px dashed purple;
+    padding: 10px;
+    gap: 10px;
+}
+
+tbody{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+td{
+    background-color: purple;
+    color: white;
+    text-align: center;
+    padding: 12px;
+    width: 150px;
+    font-weight: bold;
+}

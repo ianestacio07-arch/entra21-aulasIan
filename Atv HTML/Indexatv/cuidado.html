@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tipos JavaScript</title>
+</head>
+
+<body>
+
+    <button onclick="expor()">Export JavaScript</button>
+
+    <script>
+
+        function expor() {
+
+            // Variável sem valor
+            let orfao;
+
+            console.log(typeof orfao);
+
+            // Número
+            let numero = 10;
+
+            console.log('O tipo de numero é ' + typeof numero);
+
+            // Transformando em texto
+            numero = 10 + 'R$';
+
+            console.log('O novo tipo é ' + typeof numero);
+
+            // Tentando dividir
+            console.log(10 / numero);
+
+        }
+
+    </script>
+
+</body>
+
+</html>

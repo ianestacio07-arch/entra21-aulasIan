@@ -1,0 +1,86 @@
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0f1720;
+    color:white;
+    text-align:center;
+  }
+  
+  #arena{
+    width:620px;
+    height:760px;
+    margin:auto;
+    position:relative;
+    border-radius:18px;
+    overflow:hidden;
+    border:6px solid #163049;
+  
+    background:
+    linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px),
+    linear-gradient(#8bcf34,#70bf2e);
+  
+    background-size:50px 50px;
+  }
+  
+  #rio{
+    position:absolute;
+    top:360px;
+    width:100%;
+    height:55px;
+    background:#1da1f2;
+  }
+  
+  .ponte{
+    position:absolute;
+    top:345px;
+    width:92px;
+    height:83px;
+    background:#8b5a2b;
+  }
+  
+  .esq{
+    left:120px;
+  }
+  
+  .dir{
+    right:120px;
+  }
+  
+  .torre{
+    position:absolute;
+    width:92px;
+    height:92px;
+    border-radius:14px;
+    display:grid;
+    place-items:center;
+    font-weight:bold;
+  }
+  
+  #torreInimigaRei{
+    top:40px;
+    left:264px;
+    background:red;
+  }
+  
+  #torreJogadorRei{
+    bottom:40px;
+    left:264px;
+    background:blue;
+  }
+  
+  .tropa{
+    position:absolute;
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    font-size:27px;
+    border:3px solid #111;
+  }
+  
+  .card{
+    width:100px;
+    height:100px;
+  }

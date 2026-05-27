@@ -1,0 +1,53 @@
+body{
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    background-color: #f4f4f4;
+
+}
+
+.card{
+
+    width: 320px;
+
+    margin: 200px auto;
+
+    padding: 40px;
+
+    background-color: white;
+
+    border-radius: 20px;
+
+    box-shadow: 20px 10px 20px #003a69;
+
+}
+
+#documento{
+
+    width: 92%;
+
+    padding: 0px;
+
+}
+
+button{
+
+    width: 100%;
+
+    padding: 10px;
+
+    border: none;
+
+    background-color: royalblue;
+
+    color: white;
+
+    cursor: pointer;
+
+}
+
+.fundo-cinza{
+
+    background-color: #eee;
+
+}

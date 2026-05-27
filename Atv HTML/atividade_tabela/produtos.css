@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f5f5f5;
+    padding: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+th, td {
+    border: 1px solid #000;
+    padding: 12px;
+    text-align: center;
+}
+
+th {
+    background-color: black;
+    color: red;
+}
+
+tr:nth-child(even) {
+    background-color: rgb(255, 212, 71);
+}
+
+/* IMAGENS */
+img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Efeito ao passar o mouse */
+tr:hover {
+    background-color: #ddd;
+    transition: 0.3s;
+}

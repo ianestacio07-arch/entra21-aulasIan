@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Exercício</title>
+
+    <link rel="stylesheet" href="execi01.css">
+
+</head>
+<body>
+
+    <!--
+    Em tempo real.
+    Campos: senha e confirmarSenha.
+    Evento: keyup no campo de confirmação.
+
+    Se diferentes:
+    - borda vermelha
+    - botão bloqueado
+
+    Se iguais:
+    - borda verde
+    - botão habilitado
+    -->
+
+    <form id="meuForm">
+
+        <input 
+            type="password"
+            id="senha"
+            placeholder="Digite sua senha"
+        >
+
+        <input 
+            type="password"
+            id="confirmarSenha"
+            placeholder="Confirme sua senha"
+        >
+
+        <button 
+            type="submit"
+            id="botao"
+            disabled
+        >
+            Enviar
+        </button>
+
+    </form>
+
+    <script src="exerci01.js"></script>
+
+</body>
+</html>

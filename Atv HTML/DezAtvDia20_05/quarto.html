@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora de Desconto</title>
+</head>
+
+<body>
+
+    <h1>Calculadora de Desconto</h1>
+
+    <label for="valor">Valor do Produto</label>
+    <input id="valor" type="number" placeholder="Digite o valor">
+
+    <br><br>
+
+    <label for="desconto">Porcentagem de Desconto</label>
+    <input id="desconto" type="number" placeholder="Digite o desconto">
+
+    <br><br>
+
+    <button onclick="calcularDesconto()">Calcular</button>
+
+    <script>
+
+        function calcularDesconto() {
+
+            let valor = Number(document.getElementById("valor").value);
+
+            let desconto = Number(document.getElementById("desconto").value);
+
+            let valorDesconto = (valor * desconto) / 100;
+
+            let valorFinal = valor - valorDesconto;
+
+            alert(
+                "Valor do desconto: R$ " + valorDesconto +
+                "\nValor final: R$ " + valorFinal
+            );
+
+        }
+
+    </script>
+
+</body>
+
+</html>

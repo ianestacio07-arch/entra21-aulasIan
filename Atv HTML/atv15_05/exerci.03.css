@@ -1,0 +1,31 @@
+body{
+    margin: 0;
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+    border: 3px dashed purple;
+    width: 300px;
+    height: 300px;
+
+    margin: auto;
+    margin-top: 100px;
+}
+
+.box{
+    width: 80px;
+    height: 80px;
+    background-color: purple;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    font-weight: bold;
+}
